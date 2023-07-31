@@ -200,6 +200,19 @@ DynPalette_ColorCheck:
 		
 ; ---------------------------------------------------------------------------
 ; Some changes to the palettes need to be overridden with duplicates of the palette cycling subroutines.
+;
+; Explanation:
+; DynPaletteTransition only changes the palette cycle data that is used by PalCycle,
+; while normally not touching the palettes used by the palette cycle, leading to a
+; disconnect between the time of update of certain colors.
+; While, in the case of slow transitions, you can get away with the disconnect, faster
+; transitions can lead to a janky transition for the palette cycle.
+;
+; Here, you can setup duplicates of the palette cycle routines.
+; These duplicates will redetermine the color palette entries that are used by the
+; palette cycle data, so that they can be updated in real time with the rest of the palette.
+; These need to be slightly rewritten, so that the routines can assume they want the palette
+; data for the frame they were called in.
 ; ---------------------------------------------------------------------------
 
 DynPalette_CycleOverride:
@@ -212,8 +225,8 @@ DynPalette_CycleOverride:
 ; ---------------------------------------------------------------------------
 
 CycleOverride_Index:
-		dc.w	CycleOverride_GHZ-CycleOverride_Index
-		dc.w 	CycleOverride_Return-CycleOverride_Index
+		dc.w	CycleOverride_Return-CycleOverride_Index
+		dc.w 	CycleOverride_LZ-CycleOverride_Index
 		dc.w 	CycleOverride_Return-CycleOverride_Index
 		dc.w 	CycleOverride_Return-CycleOverride_Index
 		dc.w 	CycleOverride_Return-CycleOverride_Index
@@ -221,13 +234,17 @@ CycleOverride_Index:
 		
 ; ---------------------------------------------------------------------------		
 		
-CycleOverride_GHZ:
-		lea	(v_palcycleram).w,a0	
-		move.w	(v_pcyc_time).w,d0
-		subq.w	#1,d0
-		andi.w	#3,d0
+CycleOverride_LZ:
+		move.w	(v_pcyc_num).w,d0
+		subq.w	#1,d0		; we must make it pretend that this is the current frame, not the next one
+		andi.w	#3,d0		; if cycle > 3, reset to 0
 		lsl.w	#3,d0
-		lea	(v_pal_dry+$50).w,a1
+		lea	(v_palcycleram).w,a0
+
+		lea	(v_pal_dry+$56).w,a1
+		move.l	(a0,d0.w),(a1)+
+		move.l	4(a0,d0.w),(a1)
+		lea	(v_pal_water+$56).w,a1
 		move.l	(a0,d0.w),(a1)+
 		move.l	4(a0,d0.w),(a1)
 		
