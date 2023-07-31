@@ -70,10 +70,7 @@ PCycle_LZ:
 		addq.w	#1,(v_pcyc_num).w ; increment cycle number
 		andi.w	#3,d0		; if cycle > 3, reset to 0
 		lsl.w	#3,d0
-		lea	(Pal_LZCyc1).l,a0
-		cmpi.b	#3,(v_act).w	; check if level is SBZ3
-		bne.s	PCycLZ_NotSBZ3
-		lea	(Pal_SBZ3Cyc1).l,a0 ; load SBZ3	palette instead
+		lea	(v_palcycleram).w,a0
 
 	PCycLZ_NotSBZ3:
 		lea	(v_pal_dry+$56).w,a1
