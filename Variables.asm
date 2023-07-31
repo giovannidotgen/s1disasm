@@ -5,6 +5,21 @@ v_spbuffer:	equ $FFFFFC40	; stores most recent sp address (4 bytes)
 v_errortype:	equ $FFFFFC44	; error type
 
 v_128x128:	equ   $FF0000	; 128x128 tile mappings ($A400 bytes)
+
+v_palflags		=	$FFFF8000	; GIO: Palette changer flags. (1 byte. Bit 0 = above water. Bit 1 = below water. Bit 2 = palette cycle. Other bits MUST stay 0.)
+v_awcount		=	$FFFF8001	; GIO: Counter for number of above water palette entries to be changed. (1 byte)
+v_bwcount		=	$FFFF8002	; GIO: Counter for number of below water palette entries to be changed. (1 byte)
+v_paltime		=	$FFFF8003	; GIO: Frequency of palette changes. (1 byte)
+v_paltimecur	=	$FFFF8004	; GIO: Actual timer used for palette transitioning. (1 byte)
+v_pcyccount		=	$FFFF8005	; GIO: Counter for number of palette cycle entries to be changed. (1 byte)
+p_awtarget		=	$FFFF8006	; GIO: ROM pointer to the above water target palette. (4 bytes)
+p_bwtarget		=	$FFFF800A	; GIO: ROM pointer to the below water target palette. (4 bytes)
+p_awreplace		=	$FFFF800E	; GIO: RAM pointer to the first above water palette entry to be replaced. (4 bytes)
+p_bwreplace		=	$FFFF8012	; GIO: RAM pointer to the first below water palette entry to be replaced. (4 bytes)
+p_pcyctarget	=	$FFFF8016	; GIO: ROM pointer to the palette cycle target palette. (4 bytes)
+v_palcycleram	= 	$FFFF801A	; GIO: Buffer for the palette cycling data (as much RAM as you want)
+
+
 v_lvllayoutfg:	equ $FFFFA400	; level layout ROM address (4 bytes)
 v_lvllayoutbg:	equ $FFFFA404	; background layout ROM address (4 bytes)
 
