@@ -5287,23 +5287,37 @@ LevelDataLoad:
 		lea	(v_128x128).l,a1 ; RAM address for 128x128 mappings
 		bsr.w	KosDec
 		bsr.w	LevelLayoutLoad
-		move.w	(a2)+,d0
-		move.w	(a2),d0
-		andi.w	#$FF,d0
-		cmpi.w	#(id_LZ<<8)+3,(v_zone).w ; is level SBZ3 (LZ4) ?
-		bne.s	@notSBZ3	; if not, branch
-		moveq	#palid_SBZ3,d0	; use SB3 palette
 
-	@notSBZ3:
-		cmpi.w	#(id_SBZ<<8)+1,(v_zone).w ; is level SBZ2?
-		beq.s	@isSBZorFZ	; if yes, branch
-		cmpi.w	#(id_SBZ<<8)+2,(v_zone).w ; is level FZ?
-		bne.s	@normalpal	; if not, branch
+; GIO: Palette loading code
+; WARNING! Breaks palettes for S1 SBZ2, SBZ3 and FZ
+; Depending on your plans with the later zones, you may need to tweak or change this code.
+; The original code is left commented below, if needed.
+; v_paltracker is to be set via level events
+		
+		adda.l	#2,a2
+		moveq   #0,d0	; Initialize d0
+		move.b  (v_paltracker).w,d0	; Fetch the value in the palette tracker
+		adda.l  d0,a2	; Get the correct palette to load in the level headers
+		move.b	(a2),d0	; Move the correct palette to d0
 
-	@isSBZorFZ:
-		moveq	#palid_SBZ2,d0	; use SBZ2/FZ palette
 
-	@normalpal:
+;		move.w	(a2)+,d0
+;		move.w	(a2),d0
+;		andi.w	#$FF,d0
+;		cmpi.w	#(id_LZ<<8)+3,(v_zone).w ; is level SBZ3 (LZ4) ?
+;		bne.s	.notSBZ3	; if not, branch
+;		moveq	#palid_SBZ3,d0	; use SB3 palette
+
+;	 @notSBZ3:
+;		cmpi.w	#(id_SBZ<<8)+1,(v_zone).w ; is level SBZ2?
+;		beq.s	.isSBZorFZ	; if yes, branch
+;		cmpi.w	#(id_SBZ<<8)+2,(v_zone).w ; is level FZ?
+;		bne.s	.normalpal	; if not, branch
+
+;	@isSBZorFZ:
+;		moveq	#palid_SBZ2,d0	; use SBZ2/FZ palette
+
+;	@normalpal:
 		bsr.w	PalLoad1	; load palette (based on d0)
 		movea.l	(sp)+,a2
 		addq.w	#4,a2		; read number for 2nd PLC

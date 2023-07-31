@@ -157,6 +157,7 @@ Lamp_StoreInfo:
 		move.w	(v_waterpos2).w,($FFFFFE50).w 	; water height
 		move.b	(v_wtr_routine).w,($FFFFFE52).w ; rountine counter for water
 		move.b	(f_wtr_state).w,($FFFFFE53).w 	; water direction
+		move.b  (v_paltracker).w,(v_lamp_paltracker).w	; GIO: palette tracker		
 		rts	
 
 ; ---------------------------------------------------------------------------
@@ -172,6 +173,7 @@ Lamp_LoadInfo:
 		move.w	($FFFFFE34).w,(v_player+obY).w
 		move.w	($FFFFFE36).w,(v_rings).w
 		move.b	($FFFFFE54).w,(v_lifecount).w
+		move.b  (v_lamp_paltracker).w,(v_paltracker).w	; GIO: palette tracker		
 		clr.w	(v_rings).w
 		clr.b	(v_lifecount).w
 		move.l	($FFFFFE38).w,(v_time).w

@@ -368,3 +368,6 @@ v_creditsnum:	equ $FFFFFFF4	; credits index number (2 bytes)
 v_megadrive:	equ $FFFFFFF8	; Megadrive machine type
 f_debugmode:	equ $FFFFFFFA	; debug mode flag (sometimes 2 bytes)
 v_init:		equ $FFFFFFFC	; 'init' text string (4 bytes)
+
+v_paltracker:	= $FFFFFEA0	; GIO: palette tracker for your level. Feel free to change the RAM address. It is recommended to use something that is reset upon level beginning. (1 byte)
+v_lamp_paltracker:	= $FFFFFE55	; GIO: copy of the above variable that is used in checkpoints.

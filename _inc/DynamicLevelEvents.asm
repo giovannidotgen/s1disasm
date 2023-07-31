@@ -204,7 +204,7 @@ DLE_LZ1Routine0:
 		addq.b  #2,(v_dle_routine).w	; go to the next routine
 		; code between the DLE routine counter and the following label is triggered only on the first frame the above condition is met
 		; commented out for now until we get the level sorted (at least we know that it works!)
-;		move.b  #1,(v_paltracker).w		; change the value of the palette tracker
+		move.b  #1,(v_paltracker).w		; change the value of the palette tracker
 		move.b	#%00000011,(v_palflags).w	; mark the above ground palette as in need of changes
 		move.b	#48,(v_awcount).w			; change 48 colors
 		move.b	#64,(v_bwcount).w		
