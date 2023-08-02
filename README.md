@@ -1,15 +1,11 @@
-s1disasm_git
+s1dynpalettetransition
 ============
 
-The very latest Sonic 1 Disassembly.
+A modification of sonicretro/s1disasm's ProjectSonic1TwoEight branch that installs DynPaletteTransition, a palette transitioning routine created by Giovanni, designed for usage in Sonic 1.
 
-See: http://info.sonicretro.org/Disassemblies
-
-This branch has been modified to use Sonic 2's 128x128 chunk and path-swapper systems. Modifications originally made by MarkeyJester.
-
-See: http://info.sonicretro.org/Project_Sonic_1:_Two-Eight
+Also see: http://info.sonicretro.org/Project_Sonic_1:_Two-Eight
 
 DISCLAIMER:
-Any and all content presented in this repository is presented for informational and educational purposes only.
-Commercial usage is expressly prohibited. Sonic Retro claims no ownership of any code in these repositories.
-You assume any and all responsibility for using this content responsibly. Sonic Retro claims no responsibiliy or warranty.
+Just like for the original repository, any and all content presented in this fork is presented for informational and educational purposes only.
+Commercial usage is expressly prohibited.
+You assume any and all responsibility for using this content responsibly. None of the parties involved in the creation of this fork claim responsibility or warranty.
