@@ -2848,12 +2848,31 @@ Level_LoadPal:
 		enable_ints
 		moveq	#palid_Sonic,d0
 		bsr.w	PalLoad2	; load Sonic's palette
+
+		; GIO: while I did change the way the palette gets loaded during the fade in sequence,
+		; I had to hack this quick fix together to make sure Sonic's underwater palette would
+		; get loaded correctly in checkpoints.
+		; If you're planning for extensive usage of DynPaletteTransition, you might want to
+		; rework this piece of code into something tidier and more dynamic.
+
+		cmpi.w	#(id_LZ<<8)+3,(v_zone).w	; is level SBZ3?
+		beq.s	@isscrapbrain3				; if so, branch
+		
 		cmpi.b	#id_LZ,(v_zone).w ; is level LZ?
 		bne.s	Level_GetBgm	; if not, branch
 
 		moveq	#palid_LZSonWater,d0 ; palette number $F (LZ)
-		cmpi.b	#3,(v_act).w	; is act number 3?
+		tst.b	(v_lastlamp).w		; check for last lamppost touched
+		beq.s	Level_WaterPal		; if 0, branch
+		
+		; this check must be done with the lamppost's alternate palette tracker.
+		; by this point in time, v_paltracker is 0, and not properly initialized if
+		; you start from a lamppost.
+		cmpi.b	#1,(v_lamp_paltracker).w	; alternate palette enabled?
 		bne.s	Level_WaterPal	; if not, branch
+
+@isscrapbrain3:	
+		move.b	#1,(v_paltracker).w	 ; this is another hack: it makes sure SBZ3 loads the correct palette in LevelHeaders, regardless of where you started from.
 		moveq	#palid_SBZ3SonWat,d0 ; palette number $10 (SBZ3)
 
 	Level_WaterPal:
@@ -2979,15 +2998,15 @@ Level_Demo:
 		move.w	#510,(v_demolength).w
 
 Level_ChkWaterPal:
-		cmpi.b	#id_LZ,(v_zone).w ; is level LZ/SBZ3?
-		bne.s	Level_Delay	; if not, branch
-		moveq	#palid_LZWater,d0 ; palette $B (LZ underwater)
-		cmpi.b	#3,(v_act).w	; is level SBZ3?
-		bne.s	Level_WtrNotSbz	; if not, branch
-		moveq	#palid_SBZ3Water,d0 ; palette $D (SBZ3 underwater)
+;		cmpi.b	#id_LZ,(v_zone).w ; is level LZ/SBZ3?
+;		bne.s	Level_Delay	; if not, branch
+;		moveq	#palid_LZWater,d0 ; palette $B (LZ underwater)
+;		cmpi.b	#3,(v_act).w	; is level SBZ3?
+;		bne.s	Level_WtrNotSbz	; if not, branch
+;		moveq	#palid_SBZ3Water,d0 ; palette $D (SBZ3 underwater)
 
-	Level_WtrNotSbz:
-		bsr.w	PalLoad4_Water
+;	Level_WtrNotSbz:
+;		bsr.w	PalLoad4_Water
 
 Level_Delay:
 		move.w	#3,d1
@@ -5291,12 +5310,27 @@ LevelDataLoad:
 		bsr.w	LevelLayoutLoad
 
 ; GIO: Palette loading code
-; WARNING! Breaks palettes for S1 SBZ2, SBZ3 and FZ
-; Depending on your plans with the later zones, you may need to tweak or change this code.
-; The original code is left commented below, if needed.
-; v_paltracker is to be set via level events
+; Assumes LZ is the only water zone.
+; v_paltracker is to be set via level events.
+
+
+		move.l	a2,-(sp)	; remember initial address
+		cmpi.b	#id_LZ,(v_zone).w	; is this a water zone?
+		bne.s	@nowaterpal
+
+		moveq   #0,d0	; Initialize d0
+		move.b  (v_paltracker).w,d0	; Fetch the value in the palette tracker
+		adda.l  d0,a2	; Get the correct palette to load in the level headers
+		move.b	(a2),d0	; Move the correct palette to d0
+
+		bsr.w	PalLoad4_Water	; load palette (based on d0)		
 		
-		adda.l	#2,a2
+
+@nowaterpal:		
+		movea.l	(sp)+,a2	; get address you entered with
+		adda.l	#2,a2		; advance by the number of entries.
+
+@common:
 		moveq   #0,d0	; Initialize d0
 		move.b  (v_paltracker).w,d0	; Fetch the value in the palette tracker
 		adda.l  d0,a2	; Get the correct palette to load in the level headers
