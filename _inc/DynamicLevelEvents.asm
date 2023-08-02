@@ -202,8 +202,7 @@ DLE_LZ1Routine0:
 		cmpi.w  #$E80,(v_screenposx).w ; has the camera reached this point on x-axis?
 		bcs.s   DLE_LZ1_Return			; if not, return
 		addq.b  #2,(v_dle_routine).w	; go to the next routine
-		; code between the DLE routine counter and the following label is triggered only on the first frame the above condition is met
-		; commented out for now until we get the level sorted (at least we know that it works!)
+
 		move.b  #1,(v_paltracker).w		; change the value of the palette tracker
 		move.b	#%00000111,(v_palflags).w	; marks above, below, and cycle palette as in need of replacement.
 		move.b	#48,(v_awcount).w			; change 48 colors above water
