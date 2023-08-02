@@ -111,7 +111,7 @@ DynPalette_Cycle:
 		moveq	#0,d3					; initialize d3. it will be used for comparisons.
 		moveq	#0,d4					; initialize d4. it will be used for comparisons.
 		moveq	#0,d5					; initialize d5. it will be used for comparisons.
-		lea		(v_palcycleram).w,a0	; get the RAM pointer. this is the palette the game is using at the moment.
+		movea.l	(p_pcycreplace).w,a0	; get the RAM pointer. this is the palette the game is using at the moment.
 		movea.l	(p_pcyctarget).w,a1		; get the ROM pointer. this will be the palette once the replacements are done.
 		move.b	(v_pcyccount).w,d1		; get the above water counter. it will be used for loops.
 		subq.b	#1,d1					; subtract 1 from the counter.

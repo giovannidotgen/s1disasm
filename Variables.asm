@@ -12,12 +12,13 @@ v_bwcount		=	$FFFF8002	; GIO: Counter for number of below water palette entries 
 v_paltime		=	$FFFF8003	; GIO: Frequency of palette changes. (1 byte)
 v_paltimecur	=	$FFFF8004	; GIO: Actual timer used for palette transitioning. (1 byte)
 v_pcyccount		=	$FFFF8005	; GIO: Counter for number of palette cycle entries to be changed. (1 byte)
-p_awtarget		=	$FFFF8006	; GIO: ROM pointer to the above water target palette. (4 bytes)
-p_bwtarget		=	$FFFF800A	; GIO: ROM pointer to the below water target palette. (4 bytes)
+p_awtarget		=	$FFFF8006	; GIO: pointer to the above water target palette. (4 bytes)
+p_bwtarget		=	$FFFF800A	; GIO: pointer to the below water target palette. (4 bytes)
 p_awreplace		=	$FFFF800E	; GIO: RAM pointer to the first above water palette entry to be replaced. (4 bytes)
 p_bwreplace		=	$FFFF8012	; GIO: RAM pointer to the first below water palette entry to be replaced. (4 bytes)
-p_pcyctarget	=	$FFFF8016	; GIO: ROM pointer to the palette cycle target palette. (4 bytes)
-v_palcycleram	= 	$FFFF801A	; GIO: Buffer for the palette cycling data (as much RAM as you want)
+p_pcyctarget	=	$FFFF8016	; GIO: pointer to the palette cycle target palette. (4 bytes)
+p_pcycreplace	=	$FFFF801A	; GIO: RAM pointer to the palette cycle buffer data. Ideally, should be kept set to v_palcycleram, unless you are doing very specific things. (4 bytes)
+v_palcycleram	= 	$FFFF801E	; GIO: Buffer for the palette cycling data (as much RAM as you want)
 
 
 v_lvllayoutfg:	equ $FFFFA400	; level layout ROM address (4 bytes)
